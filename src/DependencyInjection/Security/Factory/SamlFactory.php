@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-abstract class SamlFactory extends AbstractFactory
+class SamlFactory extends AbstractFactory
 {
     public const PRIORITY = -10;
 
