@@ -80,4 +80,31 @@ abstract class SamlFactory extends AbstractFactory
             ])
         ;
     }
+
+    protected function createAuthProvider(ContainerBuilder $container, string $id, array $config, string $userProviderId): string
+    {
+        if ($config['enable_csrf'] ?? false) {
+            throw new InvalidConfigurationException('The "enable_csrf" option of "form_login" is only available when "security.enable_authenticator_manager" is set to "true", use "csrf_token_generator" instead.');
+        }
+
+        $provider = 'security.authentication.provider.dao.'.$id;
+        $container
+            ->setDefinition($provider, new ChildDefinition('security.authentication.provider.dao'))
+            ->replaceArgument(0, new Reference($userProviderId))
+            ->replaceArgument(1, new Reference('security.user_checker.'.$id))
+            ->replaceArgument(2, $id)
+        ;
+
+        return $provider;
+    }
+
+    protected function getListenerId(): string
+    {
+        return 'security.authentication.listener.form';
+    }
+
+    public function getPosition(): string
+    {
+        return 'form';
+    }
 }
